@@ -37,9 +37,16 @@ fn bubble_sort(arr: &mut Vec<i32>, s: usize, e: usize) {
 }
 
 #[wasm_bindgen]
-pub fn greet(js_arr: Int32Array) {
+pub fn bubble(js_arr: Int32Array) {
     let mut arr = js_arr.to_vec();
     let len = arr.len();
     bubble_sort(&mut arr, 0, len);
     // alert(&format!("{:?}", arr));
+}
+
+#[wasm_bindgen]
+pub fn built_in(js_arr: Int32Array) {
+    let mut arr = js_arr.to_vec();
+    let len = arr.len();
+    arr.sort();
 }
