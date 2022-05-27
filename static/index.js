@@ -1,39 +1,66 @@
-import {bubbleSort, builtIn} from './jsSort.js';
-import {initArray} from './arr.js';
+import {jsBubbleSort, jsBuiltInSort} from './jsSort.js';
+import {createArray} from './arr.js';
 import initWasm, {bubble, built_in} from './wasm/wasm_sort.js';
+
+/**
+ * @param {Function} callback
+ * @returns {number} time measured in milliseconds.
+ */
+const measurePerformance = (callback) => {
+  const start = performance.now();
+  callback();
+  return (performance.now() - start) / 1000;
+}
 
 async function run() {
   await initWasm();
-  const bigLen = 10000000;
-  const smallLen = 20000;
+  const idBubbleSort = 'bubble-sort';
+  const idBuiltinSort = 'built-in-sort';
+  /**
+   * @type {Array}
+   */
+  let array = undefined;
 
-  document.getElementById("js-bubble").onclick = () => {
-    const arr = initArray(smallLen);
-    const startTime = performance.now();
-    bubbleSort(0, arr.length, arr);
-    console.log('js bubble', arr.length, (performance.now()-startTime)/1000);
-  };
+  document.querySelector('#create-array #create').onclick = () => {
+    const length = Number(document.querySelector(`#create-array #length`).value);
+    array = createArray(length);
+    document.querySelector('#create-array #output').innerText = `Created an array of ${length} length.`;
+  }
 
-  document.getElementById("rust-bubble").onclick = () => {
-    const arr = initArray(smallLen);
-    const startTime = performance.now();
-    bubble(arr);
-    console.log('rust bubble', arr.length, (performance.now()-startTime)/1000);
-  };
+  document.querySelector(`#${idBubbleSort} #js-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => jsBubbleSort(0, arr.length, arr));
+    document.querySelector(`#${idBubbleSort} #js-time`).innerText = `Time: ${resultTime}s`;
+  }
 
-  document.getElementById("js-built-in").onclick = () => {
-    const arr = initArray(bigLen);
-    const startTime = performance.now();
-    builtIn(arr);
-    console.log('js built-in', arr.length, (performance.now()-startTime)/1000);
-  };
+  document.querySelector(`#${idBubbleSort} #rust-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => bubble(arr));
+    document.querySelector(`#${idBubbleSort} #rust-time`).innerText = `Time: ${resultTime}s`;
+  }
 
-  document.getElementById("rust-built-in").onclick = () => {
-    const arr = initArray(bigLen);
-    const startTime = performance.now();
-    built_in(arr);
-    console.log('rust built-in', arr.length, (performance.now()-startTime)/1000);
-  };
+  document.querySelector(`#${idBuiltinSort} #js-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => jsBuiltInSort(arr));
+    document.querySelector(`#${idBuiltinSort} #js-time`).innerText = `Time: ${resultTime}s`;
+  }
 
+  document.querySelector(`#${idBuiltinSort} #rust-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => built_in(arr));
+    document.querySelector(`#${idBuiltinSort} #rust-time`).innerText = `Time: ${resultTime}s`;
+  }
 }
 run();
