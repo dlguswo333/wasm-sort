@@ -1,5 +1,5 @@
 import initWasm, {bubble, built_in, merge} from './wasm/wasm_sort.js';
-import {jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsSort.js';
+import {jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsLib.js';
 import {createArray} from './arr.js';
 
 /**
