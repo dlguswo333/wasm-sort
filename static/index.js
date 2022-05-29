@@ -1,5 +1,5 @@
-import initWasm, {bubble, built_in, merge} from './wasm/wasm_sort.js';
-import {jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsLib.js';
+import initWasm, {bubble, built_in, merge, is_prime} from './wasm/wasm_sort.js';
+import {isPrime, jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsLib.js';
 import {createArray} from './arr.js';
 
 /**
@@ -11,9 +11,19 @@ const measurePerformance = (callback) => {
   callback();
   return (performance.now() - start) / 1000;
 }
+const INT32_MAX = 2147483647;
+const INT32_MIN = -2147483648;
+
+/**
+ * @param {number} num
+ */
+const checkSafeInteger = (num) => {
+  return INT32_MIN <= num && num <= INT32_MAX;
+}
 
 async function run() {
   await initWasm();
+  const idIsPrime = 'is-prime';
   const idBubbleSort = 'bubble-sort';
   const idBuiltinSort = 'built-in-sort';
   const idMergeSort = 'merge-sort';
@@ -22,6 +32,26 @@ async function run() {
    * @type {Array}
    */
   let array = undefined;
+
+  document.querySelector(`#${idIsPrime} #js-run`).onclick = () => {
+    const number = Number(document.querySelector(`#${idIsPrime} #number`).value);
+    if(!checkSafeInteger(number)) {
+      return alert('The number is not in the safe integer range!');
+    }
+    let result;
+    const resultTime = measurePerformance(() => {result = isPrime(number)});
+    document.querySelector(`#${idIsPrime} #js-time`).innerText = `${result} Time: ${resultTime}s`;
+  }
+
+  document.querySelector(`#${idIsPrime} #rust-run`).onclick = () => {
+    const number = Number(document.querySelector(`#${idIsPrime} #number`).value);
+    if(!checkSafeInteger(number)) {
+      return alert('The number is not in the safe integer range!');
+    }
+    let result;
+    const resultTime = measurePerformance(() => {result = is_prime(number)});
+    document.querySelector(`#${idIsPrime} #rust-time`).innerText = `${result} Time: ${resultTime}s`;
+  }
 
   document.querySelector('#create-array #create').onclick = () => {
     const length = Number(document.querySelector(`#create-array #length`).value);

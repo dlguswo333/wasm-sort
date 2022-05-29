@@ -6,7 +6,7 @@ extern "C" {
     // Use `js_namespace` here to bind `console.log(..)` instead of just
     // `log(..)`
     #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
+    pub fn log(s: &str);
 }
 
 #[wasm_bindgen]
@@ -14,11 +14,12 @@ extern "C" {
     pub fn alert(s: &str);
 }
 
-fn is_prime(num: i32) -> bool {
+#[wasm_bindgen]
+pub fn is_prime(num: i32) -> bool {
     if num % 2 == 0 || num == 1 {
         return false;
     }
-    for i in 1..num {
+    for i in 3..num {
         if num % i == 0 {
             return false;
         }
