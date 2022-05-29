@@ -1,6 +1,6 @@
-import {jsBubbleSort, jsBuiltInSort} from './jsSort.js';
+import initWasm, {bubble, built_in, merge} from './wasm/wasm_sort.js';
+import {jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsSort.js';
 import {createArray} from './arr.js';
-import initWasm, {bubble, built_in} from './wasm/wasm_sort.js';
 
 /**
  * @param {Function} callback
@@ -16,6 +16,8 @@ async function run() {
   await initWasm();
   const idBubbleSort = 'bubble-sort';
   const idBuiltinSort = 'built-in-sort';
+  const idMergeSort = 'merge-sort';
+
   /**
    * @type {Array}
    */
@@ -62,5 +64,24 @@ async function run() {
     const resultTime = measurePerformance(() => built_in(arr));
     document.querySelector(`#${idBuiltinSort} #rust-time`).innerText = `Time: ${resultTime}s`;
   }
+
+  document.querySelector(`#${idMergeSort} #js-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => jsMergeSort(arr));
+    document.querySelector(`#${idMergeSort} #js-time`).innerText = `Time: ${resultTime}s`;
+  }
+
+  document.querySelector(`#${idMergeSort} #rust-run`).onclick = () => {
+    if (!array) {
+      return alert('Create an array first!');
+    }
+    const arr = array.slice();
+    const resultTime = measurePerformance(() => merge(arr));
+    document.querySelector(`#${idMergeSort} #rust-time`).innerText = `Time: ${resultTime}s`;
+  }
 }
+
 run();
