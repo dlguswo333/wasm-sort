@@ -1,5 +1,5 @@
-import initWasm, {bubble, built_in, merge, is_prime} from './wasm/wasm_sort.js';
-import {isPrime, jsBubbleSort, jsBuiltInSort, jsMergeSort} from './jsLib.js';
+import initWasm, {bubble, built_in, merge, is_prime, get_combi} from './wasm/wasm_sort.js';
+import {isPrime, jsBubbleSort, jsBuiltInSort, jsMergeSort, jsGetCombi} from './jsLib.js';
 import {createArray} from './arr.js';
 
 /**
@@ -24,6 +24,7 @@ const checkSafeInteger = (num) => {
 async function run() {
   await initWasm();
   const idIsPrime = 'is-prime';
+  const idGetCombi = 'get-combinations';
   const idBubbleSort = 'bubble-sort';
   const idBuiltinSort = 'built-in-sort';
   const idMergeSort = 'merge-sort';
@@ -51,6 +52,22 @@ async function run() {
     let result;
     const resultTime = measurePerformance(() => {result = is_prime(number)});
     document.querySelector(`#${idIsPrime} #rust-time`).innerText = `${result} Time: ${resultTime}s`;
+  }
+
+  document.querySelector(`#${idGetCombi} #js-run`).onclick = () => {
+    const n = Number(document.querySelector(`#${idGetCombi} #n`).value);
+    const r = Number(document.querySelector(`#${idGetCombi} #r`).value);
+    let result;
+    const resultTime = measurePerformance(() => {result = jsGetCombi(r, n)});
+    document.querySelector(`#${idGetCombi} #js-time`).innerText = `${result} Time: ${resultTime}s`;
+  }
+
+  document.querySelector(`#${idGetCombi} #rust-run`).onclick = () => {
+    const n = Number(document.querySelector(`#${idGetCombi} #n`).value);
+    const r = Number(document.querySelector(`#${idGetCombi} #r`).value);
+    let result;
+    const resultTime = measurePerformance(() => {result = get_combi(r, n)});
+    document.querySelector(`#${idGetCombi} #rust-time`).innerText = `${result} Time: ${resultTime}s`;
   }
 
   document.querySelector('#create-array #create').onclick = () => {

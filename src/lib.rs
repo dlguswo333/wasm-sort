@@ -97,3 +97,24 @@ pub fn merge(js_arr: Int32Array) {
     let mut tmp = vec![0; len];
     merge_sort(&mut arr, 0, len, &mut tmp);
 }
+
+/**
+ * closure는 recursive call이 안됨.
+ * inner function은 closure와 같이 외부 값을 액세스할 수가 없음.
+ */
+#[wasm_bindgen]
+pub fn get_combi(r: i32, n: i32) -> i32 {
+    fn combi(ind: i32, takes: i32, r: i32, n: i32) -> i32 {
+        if takes == r {
+            return 1;
+        }
+        let mut val = 0;
+        if ind < n {
+            val += combi(ind + 1, takes + 1, r, n);
+            val += combi(ind + 1, takes, r, n);
+        }
+        return val;
+    }
+    let combinations = combi(0, 0, r, n);
+    return combinations;
+}

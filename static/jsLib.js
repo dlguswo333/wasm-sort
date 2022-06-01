@@ -93,3 +93,32 @@ const mergeSort = (arr, s, e, tmp) => {
   const tmp = new Array(arr.length).fill(0);
   mergeSort(arr, 0, arr.length, tmp);
 }
+
+
+/**
+ * @param {number} r
+ * @param {number} n
+ * @returns {number}
+ */
+export const jsGetCombi = (r, n) => {
+  /**
+   * @param {number} ind
+   * @param {number} takes
+   * @param {number} r
+   * @param {number} n
+   * @returns {number}
+   */
+  const combi = (ind, takes, r, n) => {
+    if(takes === r) {
+      return 1;
+    }
+    let val = 0;
+    if(ind < n) {
+      val += combi(ind + 1, takes + 1, r, n);
+      val += combi(ind + 1, takes, r, n);
+    }
+    return val;
+  }
+  let combinations = combi(0, 0, r, n);
+  return combinations;
+}
