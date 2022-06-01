@@ -4,6 +4,9 @@
  * @returns {boolean}
  */
 export const isPrime = (num) => {
+  if(num === 2) {
+    return true;
+  }
   if(num % 2 === 0 || num === 1) {
     return false;
   }
